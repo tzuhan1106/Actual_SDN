@@ -8,6 +8,7 @@ Before you use the project, you need to set static IP for your host and controll
 ryu-manager --observe-links ofctl_rest.py actualSDN_django_switch.py
 ```
 ## Run django
+vlan controll page run on 127.0.0.1:8000/vlan_admin
 ```
 python manager.py runserver
 ```
