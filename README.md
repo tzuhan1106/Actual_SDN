@@ -1,5 +1,5 @@
 # actual_sdn
-This is the sdn practice on the cisco 2960x
+This is the sdn implementation on the cisco 2960x.
 
 ## Run Controller
 ```
@@ -9,5 +9,45 @@ ryu-manager --observe-links ofctl_rest.py actualSDN_django_switch.py
 ```
 python manager.py runserver
 ```
-## Check flows
-* 127.0.0.1:8080/stats/flow/{dpid}
+## REST API
+This function can get flow stats, add flows, delete flows etc. Please refer to the following [link](https://ryu.readthedocs.io/en/latest/app/ofctl_rest.html).
+#### Example of use:
+* Get flow table: 127.0.0.1:8080/stats/flow/{dpid}
+* Add flow:
+```
+$ curl –X POST –d '{
+	"dpid":1,
+	"actions": [
+        {
+            "type":"OUTPUT",
+            "port": 2
+        }
+    ],
+	"match":{
+		"dl_dst":"MAC1",
+		"dl_src":"MAC2"
+	}
+}'  http://localhost:8080/stats/flowentry/add
+
+```
+* Delete specific flow:
+```
+$ curl –X POST –d '{
+	"dpid":1,
+	"actions": [
+        {
+            "type":"OUTPUT",
+            "port": 2
+        }
+    ],
+	"match":{
+		"dl_dst":"MAC1"
+		"dl_src":"MAC2"
+	}
+}'  http://localhost:8080/stats/flowentry/delete
+
+```
+* Delete all flows:
+```
+$ curl -X DELETE http://localhost:8080/stats/flowentry/clear/{dpid}
+```
