@@ -45,7 +45,7 @@ $ curl –X POST –d '{
         }
     ],
 	"match":{
-		"dl_dst":"MAC1"
+		"dl_dst":"MAC1",
 		"dl_src":"MAC2"
 	}
 }'  http://localhost:8080/stats/flowentry/delete
