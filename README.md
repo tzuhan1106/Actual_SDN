@@ -1,5 +1,7 @@
-# SDN Implementation
-This is the sdn implementation on the cisco switch. Before you use the project, you need to set static IP for your host and controller. And you need to modify the mac_table.txt. The mac_table is used to record the valid hosts MAC Address & IP.
+# Sdn Implementation
+This is the sdn implementation on the cisco switch. We use **RYU** controller.
+
+Before you use the project, you need to set static IP for your host and controller and modify the mac_table.txt. The mac_table is used to record the valid hosts MAC Address & IP.
 
 ## Run Controller
 ```
