@@ -10,6 +10,7 @@ ryu-manager --observe-links ofctl_rest.py actualSDN_django_switch.py
 ## Run django
 vlan controll page run on 127.0.0.1:8000/vlan_admin
 ```
+cd sdn_mystie/
 python manager.py runserver
 ```
 ## REST API
