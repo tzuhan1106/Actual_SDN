@@ -23,9 +23,9 @@ class actualSDN_switch(app_manager.RyuApp):
 
         self.vtable = {}
         # default vlan table
-        self.vtable = {'00:00:00:00:00:01':'1',
-                        '00:00:00:00:00:02':'1',
-                        '00:00:00:00:00:03':'1'}
+        self.vtable = {'20:89:84:bf:3c:df':'1',
+                        'b8:88:e3:c2:dc:5a':'1',
+                        'b8:88:e3:d9:ea:5d':'1'}
         self.mac_to_ip = {} # mac <-> ip
         self.ip_to_mac = {} # ip <-> mac
         self.mac_to_port = {}   # host in which port
@@ -263,8 +263,7 @@ class actualSDN_switch(app_manager.RyuApp):
         # If you hit this you might want to increase
         # the "miss_send_length" of your switch
         if ev.msg.msg_len < ev.msg.total_len:
-            self.logger.debug("packet truncated: only %s of %s bytes",
-                              ev.msg.msg_len, ev.msg.total_len)
+            self.logger.debug("packet truncated: only %s of %s bytes",ev.msg.msg_len, ev.msg.total_len)
         msg = ev.msg
         datapath = msg.datapath
         ofproto = datapath.ofproto
@@ -279,6 +278,7 @@ class actualSDN_switch(app_manager.RyuApp):
             # ignore lldp packet
             return
 
+        # handle arp
         arp_pkt = pkt.get_protocol(arp.arp)
         if pkt_ethernet.ethertype== 2054:
             self._handle_arp(datapath, in_port, pkt_ethernet, arp_pkt)
@@ -301,11 +301,11 @@ class actualSDN_switch(app_manager.RyuApp):
                                 
                 print('add', src)
                 self.AddHost(dpid,src,in_port)
-                #Add information to mac_to_port     
+                #Add information of src to mac_to_port     
                 self.mac_to_port[dpid][src] = in_port
                 self.host_enter += 1
 
-                # if entered host > 3, it will install shortest path
+                # if entered host >= 3, it will start install shortest path
                 if self.host_enter == self.host_num:
                     self.default_path_install(ev)
 
@@ -336,6 +336,7 @@ class actualSDN_switch(app_manager.RyuApp):
         
         # when the dst is in the direct topo
         if dst in self.mac_to_port[dpid]:
+            # if src and dst are in the same vlan, get the dst outport.
             if self.vtable[src] != None and self.vtable[src] == self.vtable[dst]:
                 out_port = self.mac_to_port[dpid][dst]
                 actions = [parser.OFPActionOutput(out_port)]

@@ -20,6 +20,7 @@ class actualSDN_Django_Switch(actualSDN.actualSDN_switch):
 		self.config = {}
 		self.start_sock_server()
 
+	# if the vlan table is changed, update it and delete relative flows.
 	def set_vtable(self, host, vlan):
 		if self.vtable[host] != vlan:
 			del self.vtable[host]
@@ -28,6 +29,7 @@ class actualSDN_Django_Switch(actualSDN.actualSDN_switch):
 			print(self.vtable)
 			self.ShortestPathDeleteFlow(self.default_datapath, host)
 
+	# detect continuously if the web send socket or not 
 	def recv_loop(self):
 		while True:
 			print('wait rcv')
@@ -41,7 +43,7 @@ class actualSDN_Django_Switch(actualSDN.actualSDN_switch):
 				self.set_vtable(str(host).rstrip(' '), str(vlan))
 			print(self.vtable)			
 
-
+	# When the controller start, sock server will also be started.
 	def start_sock_server(self):
 		if os.path.exists(SOCKFILE):
 			os.unlink(SOCKFILE)
